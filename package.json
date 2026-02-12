@@ -1,0 +1,17 @@
+{
+  "name": "pi-skill-agent-browser",
+  "version": "1.0.0",
+  "description": "Pi skill for browser automation via Chrome DevTools Protocol — navigate, evaluate JS, screenshot, pick elements, dismiss cookies, and monitor console/network logs.",
+  "keywords": ["pi-package", "browser", "cdp", "chrome", "devtools", "automation", "skill", "agent-browser"],
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "agent-browser": "./bin/agent-browser"
+  },
+  "pi": {
+    "skills": ["./skills"]
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

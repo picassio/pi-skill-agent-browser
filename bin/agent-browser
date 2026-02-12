@@ -1,0 +1,49 @@
+#!/usr/bin/env node
+
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { execFileSync } from "node:child_process";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const scriptsDir = join(__dirname, "..", "skills", "agent-browser", "scripts");
+
+const COMMANDS = {
+  start: "start.js",
+  nav: "nav.js",
+  eval: "eval.js",
+  screenshot: "screenshot.js",
+  pick: "pick.js",
+  "dismiss-cookies": "dismiss-cookies.js",
+  watch: "watch.js",
+  "logs-tail": "logs-tail.js",
+  "net-summary": "net-summary.js",
+};
+
+const command = process.argv[2];
+const args = process.argv.slice(3);
+
+if (!command || command === "--help" || command === "-h" || !COMMANDS[command]) {
+  console.log("Usage: agent-browser <command> [args]\n");
+  console.log("Commands:");
+  console.log("  start              Start Chrome with remote debugging");
+  console.log("  nav <url> [--new]  Navigate current tab or open new tab");
+  console.log("  eval '<code>'      Evaluate JavaScript in active tab");
+  console.log("  screenshot         Capture viewport screenshot");
+  console.log('  pick "<message>"   Interactive element picker');
+  console.log("  dismiss-cookies    Dismiss cookie consent dialogs");
+  console.log("  watch              Start background console/network logger");
+  console.log("  logs-tail          Tail latest log file");
+  console.log("  net-summary        Summarize network requests from logs");
+  process.exit(command && !COMMANDS[command] ? 1 : 0);
+}
+
+const script = join(scriptsDir, COMMANDS[command]);
+
+try {
+  execFileSync(process.execPath, [script, ...args], {
+    stdio: "inherit",
+    cwd: scriptsDir,
+  });
+} catch (e) {
+  process.exit(e.status ?? 1);
+}
